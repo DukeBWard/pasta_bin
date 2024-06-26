@@ -1,3 +1,5 @@
 body {
-    font-family: Verdana, Geneva, Tahoma, sans-serif
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-image: url("../../assets/pasta.png");
+    background-size: cover;
 }
