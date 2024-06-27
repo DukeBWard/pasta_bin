@@ -14,7 +14,10 @@ body {
     height: 80%;
     margin: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
     border-radius:25px ;
+    box-shadow: 5px 10px;
+}
+
+p {
+    margin: 2% 2% 2% 2%;
 }
