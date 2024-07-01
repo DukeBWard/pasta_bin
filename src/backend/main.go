@@ -1,4 +1,4 @@
-package backend
+package main
 
 import (
 	"fmt"
@@ -14,11 +14,12 @@ type FormData struct {
 
 // Handler to serve the HTML form
 func formHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("index.html")
+	tmpl, err := template.ParseFiles("../view/index.html", "../view/style.css")
 	if err != nil {
 		http.Error(w, "Could not load template", http.StatusInternalServerError)
 		return
 	}
+
 	tmpl.Execute(w, nil)
 }
 
@@ -44,6 +45,7 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
 	http.HandleFunc("/", formHandler)
 	http.HandleFunc("/submit", submitHandler)
 
