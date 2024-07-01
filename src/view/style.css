@@ -21,4 +21,11 @@ body {
 input {
     border: 0;
     margin: 2% 2%;
+    width: 100%;
+}
+
+button {
+    position: absolute;
+    top: 92%;
+    left: 92%;
 }
