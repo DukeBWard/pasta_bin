@@ -45,6 +45,8 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	http.Handle("/view/", http.StripPrefix("/view/", http.FileServer(http.Dir("../view"))))
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("../../assets"))))
 
 	http.HandleFunc("/", formHandler)
 	http.HandleFunc("/submit", submitHandler)
