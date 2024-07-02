@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="/view/style.css"> -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/view/style.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
     <title>Pasta Bin</title>
 </head>
 <body>
     <h1>Welcome to Pasta Bin!</h1>
     <div class="box">
-        <form action="/submit" method="post">
-            <p type="text" name="userInput" contenteditable="true"></p>
+        <form id="inputForm" action="/submit" method="post">
+            <p type="text" name="userInput" id="userInput" contenteditable="true"></p>
+            <input type="hidden" name="userInputHidden" id="userInputHidden">
             <button type="submit" value="Submit">Submit
         </form>
     </div>
+
+    <script>
+        //this is a little jank but it get the job done with the styling i want
+        document.getElementById('inputForm').addEventListener('submit', function(event) {
+            var userInput = document.getElementById('userInput').innerText;
+            document.getElementById('userInputHidden').value = userInput;
+        });
+    </script>
+
 </body>
 </html>
