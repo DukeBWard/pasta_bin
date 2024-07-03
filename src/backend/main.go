@@ -62,7 +62,7 @@ func main() {
 	}
 
 	_, _, err = client.Collection("posts").Add(ctx, map[string]interface{}{
-		"post_id": uuid.New(),
+		"post_id": uuid.New().String(),
 	})
 	if err != nil {
 		log.Fatalf("Failed: %v", err)
