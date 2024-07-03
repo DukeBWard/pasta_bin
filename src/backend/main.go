@@ -1,10 +1,17 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
+
+	firebase "firebase.google.com/go"
+	"github.com/google/uuid"
+	"github.com/joho/godotenv"
+	"google.golang.org/api/option"
 )
 
 type FormData struct {
@@ -39,6 +46,30 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	godotenv.Load()
+
+	// Use a service account
+	ctx := context.Background()
+	sa := option.WithCredentialsFile(os.Getenv("CRED"))
+	app, err := firebase.NewApp(ctx, nil, sa)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	client, err := app.Firestore(ctx)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	_, _, err = client.Collection("posts").Add(ctx, map[string]interface{}{
+		"post_id": uuid.New(),
+	})
+	if err != nil {
+		log.Fatalf("Failed: %v", err)
+	}
+
+	defer client.Close()
+
 	http.Handle("/view/", http.StripPrefix("/view/", http.FileServer(http.Dir("../view"))))
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("../../assets"))))
 
