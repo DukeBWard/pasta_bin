@@ -9,6 +9,7 @@ import (
 	"os"
 
 	firebase "firebase.google.com/go"
+	"github.com/a-h/templ"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"google.golang.org/api/option"
@@ -70,10 +71,14 @@ func main() {
 
 	defer client.Close()
 
-	http.Handle("/view/", http.StripPrefix("/view/", http.FileServer(http.Dir("../view"))))
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("../../assets"))))
+	component := Pasta_bin()
 
-	http.HandleFunc("/", formHandler)
+	// need to use /view/ like how I do in the index.html for the style sheet.  basically virtual link
+	http.Handle("/view/", http.StripPrefix("/view/", http.FileServer(http.Dir("."))))
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("../assets"))))
+
+	//http.HandleFunc("/", formHandler)
+	http.Handle("/", templ.Handler(component))
 	http.HandleFunc("/submit", submitHandler)
 
 	fmt.Println("Server started at http://localhost:8080")
