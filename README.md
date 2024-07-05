@@ -2,4 +2,4 @@
 Paste bin in Golang!
 
 # Notes
-* Currently working on which database I am going to use for storing the text
+* Using Firestore for post tracking, not currently supporting user profiles
