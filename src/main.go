@@ -10,6 +10,8 @@ import (
 
 	firebase "firebase.google.com/go"
 	"github.com/a-h/templ"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"google.golang.org/api/iterator"
@@ -20,18 +22,8 @@ type FormData struct {
 	UserInput string
 }
 
-// func formHandler(w http.ResponseWriter, r *http.Request) {
-// 	tmpl, err := template.ParseFiles("../view/index.html", "../view/style.css")
-// 	if err != nil {
-// 		http.Error(w, "Could not load template", http.StatusInternalServerError)
-// 		return
-// 	}
-
-// 	tmpl.Execute(w, nil)
-// }
-
 func getHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("../view/index.html", "../view/style.css")
+	tmpl, err := template.ParseFiles("src/index.html")
 	if err != nil {
 		http.Error(w, "Could not load template", http.StatusInternalServerError)
 		return
@@ -54,7 +46,7 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer client.Close()
 
-	iter := client.Collection("posts").Select()
+	iter := client.Collection("posts").Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -98,34 +90,39 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer client.Close()
 
-	post_id := uuid.New().String()
-
+	postID := uuid.New().String()
 	userInput := r.FormValue("userInputHidden")
 
 	_, _, err = client.Collection("posts").Add(ctx, map[string]interface{}{
-		"post_id": post_id,
+		"post_id": postID,
 		"body":    userInput,
 	})
 	if err != nil {
 		log.Fatalf("Failed: %v", err)
 	}
 
-	fmt.Fprintf(w, "You entered: %s\n", post_id)
+	fmt.Fprintf(w, "You entered: %s\n", postID)
 }
 
 func main() {
-
-	component := Pasta_bin()
+	// Initialize Chi router
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
 	// need to use /view/ like how I do in the index.html for the style sheet.  basically virtual link
-	http.Handle("/view/", http.StripPrefix("/view/", http.FileServer(http.Dir("."))))
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("../assets"))))
+	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("."))))
+	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("../assets"))))
 
-	//http.HandleFunc("/", formHandler)
-	http.Handle("/", templ.Handler(component))
-	http.HandleFunc("/submit", submitHandler)
-	http.HandleFunc()
+	// Define routes
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		component := Pasta_bin()
+		templ.Handler(component).ServeHTTP(w, r)
+	})
+	r.Post("/submit", submitHandler)
+	r.Get("/get_posts/{url}", getHandler)
 
+	// Start the server
 	fmt.Println("Server started at http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
