@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -23,11 +22,8 @@ type FormData struct {
 }
 
 func getHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("src/index.html")
-	if err != nil {
-		http.Error(w, "Could not load template", http.StatusInternalServerError)
-		return
-	}
+
+	urlParam := chi.URLParam(r, "url")
 
 	godotenv.Load()
 
@@ -46,19 +42,31 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 
 	defer client.Close()
 
-	iter := client.Collection("posts").Documents(ctx)
+	iter := client.Collection("posts").Where("post_id", "==", urlParam).Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
 			break
 		}
 		if err != nil {
-			log.Fatalf("Failed to iterate: %v", err)
+			return
 		}
-		fmt.Println(doc.Data())
+
+		var post FormData
+		docData := doc.Data()
+
+		if content, ok := docData["body"].(string); ok {
+			post.UserInput = content
+		} else {
+			log.Fatalf("error parsing document data")
+		}
+
+		component := Pasta_bin()
+		component.Render(r.Context(), w)
+
 	}
 
-	tmpl.Execute(w, nil)
+	// tmpl.Execute(w, nil)
 }
 
 func submitHandler(w http.ResponseWriter, r *http.Request) {
