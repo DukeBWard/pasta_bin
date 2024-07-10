@@ -1,10 +1,6 @@
 package main
 
-templ post(content string) {
-    <div>{ content }</div>
-}
-
-templ pasta_bin() {
+templ pasta_bin(content string) {
 	<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +11,7 @@ templ pasta_bin() {
         <h1>Welcome to Pasta Bin!</h1>
         <div class="box">
             <form id="inputForm" action="/submit" method="post">
-                <p type="text" name="userInput" id="userInput" contenteditable="true"></p>
+                <p type="text" name="userInput" id="userInput" contenteditable="true">{ content }</p>
                 <input type="hidden" name="userInputHidden" id="userInputHidden"></input>
                 <button type="submit" value="Submit">Submit</button>
             </form>

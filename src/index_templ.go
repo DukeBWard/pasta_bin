@@ -8,7 +8,7 @@ package main
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Pasta_bin() templ.Component {
+func pasta_bin(content string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -26,7 +26,20 @@ func Pasta_bin() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/style.css\"><title>Pasta Bin</title></head><body><h1>Welcome to Pasta Bin!</h1><div class=\"box\"><form id=\"inputForm\" action=\"/submit\" method=\"post\"><p type=\"text\" name=\"userInput\" id=\"userInput\" contenteditable=\"true\"></p><input type=\"hidden\" name=\"userInputHidden\" id=\"userInputHidden\"> <button type=\"submit\" value=\"Submit\">Submit</button></form></div><script>\n            //this is a little jank but it get the job done with the styling i want\n            document.getElementById('inputForm').addEventListener('submit', function(event) {\n                var userInput = document.getElementById('userInput').innerText;\n                document.getElementById('userInputHidden').value = userInput;\n            });\n        </script></body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/style.css\"><title>Pasta Bin</title></head><body><h1>Welcome to Pasta Bin!</h1><div class=\"box\"><form id=\"inputForm\" action=\"/submit\" method=\"post\"><p type=\"text\" name=\"userInput\" id=\"userInput\" contenteditable=\"true\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(content)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `index.templ`, Line: 14, Col: 95}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><input type=\"hidden\" name=\"userInputHidden\" id=\"userInputHidden\"> <button type=\"submit\" value=\"Submit\">Submit</button></form></div><script>\n            //this is a little jank but it get the job done with the styling i want\n            document.getElementById('inputForm').addEventListener('submit', function(event) {\n                var userInput = document.getElementById('userInput').innerText;\n                document.getElementById('userInputHidden').value = userInput;\n            });\n        </script></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
