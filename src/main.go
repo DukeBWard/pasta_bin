@@ -109,7 +109,8 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Failed: %v", err)
 	}
 
-	fmt.Fprintf(w, "You entered: %s\n", postID)
+	component := submit("http://localhost:8080/get_posts/" + postID)
+	component.Render(r.Context(), w)
 }
 
 func main() {

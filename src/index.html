@@ -3,10 +3,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Pasta Bin</title>
-    </head>
-    <body>
-        <h1>Welcome to Pasta Bin!</h1>
-        <div class="box">
-            <p>Your pasta has been submitted! You can view it <a href="{ url }">here</a></p>
-        </div>
-    </body>
+</head>
+
+<body>
+    <h1>Welcome to Pasta Bin!</h1>
+    <div class="box">
+        <form id="inputForm" action="/submit" method="post">
+            <p type="text" name="userInput" id="userInput">Your pasta has been submitted! You can view it <a
+                    href="{ url }">here</a></p>
+        </form>
+    </div>
+</body>
