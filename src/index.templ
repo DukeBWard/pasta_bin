@@ -33,7 +33,8 @@ templ pasta_bin(content string) {
             <form id="inputForm" action="/submit" method="post">
                 <p type="text" name="userInput" id="userInput" contenteditable="true">{ content }</p>
                 <input type="hidden" name="userInputHidden" id="userInputHidden"></input>
-                <button type="submit" value="Submit">Submit</button>
+                <button id="submit" type="submit" value="Submit">Submit</button>
+                <button id="delete" type="delete" value="Delete">Delete</button>
             </form>
         </div>
 
