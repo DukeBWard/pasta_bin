@@ -156,8 +156,8 @@ func main() {
 	r.Use(middleware.Recoverer)
 
 	// need to use /view/ like how I do in the index.html for the style sheet.  basically virtual link
-	//r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("."))))
-	//r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("../assets"))))
+	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("."))))
+	r.Handle("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("../assets"))))
 
 	// Define routes
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
