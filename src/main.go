@@ -21,6 +21,42 @@ type FormData struct {
 	UserInput string
 }
 
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	urlParam := chi.URLParam(r, "url")
+
+	godotenv.Load()
+
+	// Use a service account
+	ctx := context.Background()
+	sa := option.WithCredentialsFile(os.Getenv("CRED"))
+	app, err := firebase.NewApp(ctx, nil, sa)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	client, err := app.Firestore(ctx)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer client.Close()
+
+	iter := client.Collection("posts").Where("post_id", "==", urlParam).Documents(ctx)
+
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return
+		}
+
+		doc.Ref.Delete(ctx)
+	}
+
+}
+
 func getHandler(w http.ResponseWriter, r *http.Request) {
 
 	urlParam := chi.URLParam(r, "url")
@@ -129,7 +165,8 @@ func main() {
 		templ.Handler(component).ServeHTTP(w, r)
 	})
 	r.Post("/submit", submitHandler)
-	r.Get("/get_posts/{url}", getHandler)
+	r.Get("/{url}", getHandler)
+	r.Delete("/{url}", deleteHandler)
 
 	// Start the server
 	fmt.Println("Server started at http://localhost:8080")
