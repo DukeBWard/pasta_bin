@@ -24,35 +24,40 @@ type FormData struct {
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	urlParam := chi.URLParam(r, "url")
 
-	godotenv.Load()
+	r.ParseForm()
 
-	// Use a service account
-	ctx := context.Background()
-	sa := option.WithCredentialsFile(os.Getenv("CRED"))
-	app, err := firebase.NewApp(ctx, nil, sa)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	if r.Form.Has("delete") {
 
-	client, err := app.Firestore(ctx)
-	if err != nil {
-		log.Fatalln(err)
-	}
+		godotenv.Load()
 
-	defer client.Close()
-
-	iter := client.Collection("posts").Where("post_id", "==", urlParam).Documents(ctx)
-
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
+		// Use a service account
+		ctx := context.Background()
+		sa := option.WithCredentialsFile(os.Getenv("CRED"))
+		app, err := firebase.NewApp(ctx, nil, sa)
 		if err != nil {
-			return
+			log.Fatalln(err)
 		}
 
-		doc.Ref.Delete(ctx)
+		client, err := app.Firestore(ctx)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		defer client.Close()
+
+		iter := client.Collection("posts").Where("post_id", "==", urlParam).Documents(ctx)
+
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return
+			}
+
+			doc.Ref.Delete(ctx)
+		}
 	}
 
 }
