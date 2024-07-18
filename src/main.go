@@ -22,48 +22,66 @@ type FormData struct {
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
-	urlParam := chi.URLParam(r, "url")
+	log.Print("hit")
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
 
 	r.ParseForm()
 
-	if r.Form.Has("delete") {
+	postID := r.FormValue("post_id")
+	fmt.Print(postID)
 
-		godotenv.Load()
+	if postID == "" {
+		http.Error(w, "Post ID is required", http.StatusBadRequest)
+		return
+	}
 
-		// Use a service account
-		ctx := context.Background()
-		sa := option.WithCredentialsFile(os.Getenv("CRED"))
-		app, err := firebase.NewApp(ctx, nil, sa)
+	godotenv.Load()
+
+	// Use a service account
+	ctx := context.Background()
+	sa := option.WithCredentialsFile(os.Getenv("CRED"))
+	app, err := firebase.NewApp(ctx, nil, sa)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	client, err := app.Firestore(ctx)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer client.Close()
+
+	iter := client.Collection("posts").Where("post_id", "==", postID).Documents(ctx)
+
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
 		if err != nil {
-			log.Fatalln(err)
+			http.Error(w, "Error finding document", http.StatusInternalServerError)
+			return
 		}
 
-		client, err := app.Firestore(ctx)
+		_, err = doc.Ref.Delete(ctx)
 		if err != nil {
-			log.Fatalln(err)
-		}
-
-		defer client.Close()
-
-		iter := client.Collection("posts").Where("post_id", "==", urlParam).Documents(ctx)
-
-		for {
-			doc, err := iter.Next()
-			if err == iterator.Done {
-				break
-			}
-			if err != nil {
-				return
-			}
-
-			doc.Ref.Delete(ctx)
+			http.Error(w, "Error deleting document", http.StatusInternalServerError)
+			return
 		}
 	}
+
+	component := pasta_bin("Post deleted (replace this)", "")
+	component.Render(r.Context(), w)
 
 }
 
 func getHandler(w http.ResponseWriter, r *http.Request) {
-
+	log.Print("getHandler")
 	urlParam := chi.URLParam(r, "url")
 
 	godotenv.Load()
@@ -102,7 +120,7 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatalf("error parsing document data")
 		}
 
-		component := pasta_bin(post.UserInput)
+		component := pasta_bin(post.UserInput, urlParam)
 		component.Render(r.Context(), w)
 
 	}
@@ -166,13 +184,13 @@ func main() {
 
 	// Define routes
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		component := pasta_bin("")
+		component := pasta_bin("", "")
 		templ.Handler(component).ServeHTTP(w, r)
 	})
 
 	r.Post("/submit", submitHandler)
 	r.Get("/{url}", getHandler)
-	r.Delete("/{url}", deleteHandler)
+	r.Post("/delete", deleteHandler)
 
 	// Start the server
 	fmt.Println("Server started at http://localhost:8080")

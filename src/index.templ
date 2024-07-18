@@ -20,7 +20,7 @@ templ submit(url string) {
 
 }
 
-templ pasta_bin(content string) {
+templ pasta_bin(content string, postID string) {
 	<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,13 +30,14 @@ templ pasta_bin(content string) {
     <body>
         <h1>Welcome to Pasta Bin!</h1>
         <div class="box">
-            <form id="inputForm" action="/submit" method="post">
+            <form id="inputForm" action="/submit" method="POST">
                 <p type="text" name="userInput" id="userInput" contenteditable="true">{ content }</p>
                 <input type="hidden" name="userInputHidden" id="userInputHidden"></input>
                 <button id="submit" type="submit" value="Submit">Submit</button>
             </form>
-            <form id="deleteForm" action="/delete" method="post"> 
-                <button id="delete" type="delete" value="Delete">Delete</button>
+            <form id="deleteForm" action="/delete" method="POST"> 
+                <input type="hidden" name="post_id" id="post_id" value={ postID }></input>
+                <button id="delete" type="submit" value="Delete">Delete</button>
             </form>
         </div>
 
