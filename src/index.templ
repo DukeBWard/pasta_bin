@@ -50,3 +50,22 @@ templ pasta_bin(content string, postID string) {
         </script>
     </body>
 }
+
+templ pasta_deleted(url string) {
+     <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Pasta Bin</title>
+</head>
+
+<body>
+    <h1>Welcome to Pasta Bin!</h1>
+    <div class="box">
+        <form id="inputForm" action="/submit" method="post">
+            <p type="text" name="userInput" id="userInput">Your pasta has been deleted.  Click <a
+                    href={ templ.SafeURL(url) } target="_blank">here</a> to return to home.</p>
+        </form>
+    </div>
+</body>
+}

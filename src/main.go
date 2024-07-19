@@ -22,8 +22,6 @@ type FormData struct {
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("hit")
-
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -75,13 +73,12 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	component := pasta_bin("Post deleted (replace this)", "")
+	component := pasta_deleted("http://localhost:8080/")
 	component.Render(r.Context(), w)
 
 }
 
 func getHandler(w http.ResponseWriter, r *http.Request) {
-	log.Print("getHandler")
 	urlParam := chi.URLParam(r, "url")
 
 	godotenv.Load()

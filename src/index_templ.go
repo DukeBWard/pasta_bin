@@ -61,7 +61,7 @@ func pasta_bin(content string, postID string) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/style.css\"><title>Pasta Bin</title></head><body><h1>Welcome to Pasta Bin!</h1><div class=\"box\"><form id=\"inputForm\" action=\"/submit\" method=\"post\"><p type=\"text\" name=\"userInput\" id=\"userInput\" contenteditable=\"true\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/style.css\"><title>Pasta Bin</title></head><body><h1>Welcome to Pasta Bin!</h1><div class=\"box\"><form id=\"inputForm\" action=\"/submit\" method=\"POST\"><p type=\"text\" name=\"userInput\" id=\"userInput\" contenteditable=\"true\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -74,7 +74,7 @@ func pasta_bin(content string, postID string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><input type=\"hidden\" name=\"userInputHidden\" id=\"userInputHidden\"> <button id=\"submit\" type=\"submit\" value=\"Submit\">Submit</button></form><form id=\"deleteForm\" action=\"/delete\" method=\"post\"><input type=\"hidden\" name=\"post_id\" id=\"post_id\" value=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><input type=\"hidden\" name=\"userInputHidden\" id=\"userInputHidden\"> <button id=\"submit\" type=\"submit\" value=\"Submit\">Submit</button></form><form id=\"deleteForm\" action=\"/delete\" method=\"POST\"><input type=\"hidden\" name=\"post_id\" id=\"post_id\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -88,6 +88,41 @@ func pasta_bin(content string, postID string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"> <button id=\"delete\" type=\"submit\" value=\"Delete\">Delete</button></form></div><script>\r\n            //this is a little jank but it get the job done with the styling i want\r\n            document.getElementById('inputForm').addEventListener('submit', function(event) {\r\n                var userInput = document.getElementById('userInput').innerText;\r\n                document.getElementById('userInputHidden').value = userInput;\r\n            });\r\n        </script></body>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func pasta_deleted(url string) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><link rel=\"stylesheet\" href=\"/static/style.css\"><title>Pasta Bin</title></head><body><h1>Welcome to Pasta Bin!</h1><div class=\"box\"><form id=\"inputForm\" action=\"/submit\" method=\"post\"><p type=\"text\" name=\"userInput\" id=\"userInput\">Your pasta has been deleted.  Click <a href=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 templ.SafeURL = templ.SafeURL(url)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var7)))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" target=\"_blank\">here</a> to return to home.</p></form></div></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
