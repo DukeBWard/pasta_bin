@@ -18,8 +18,8 @@ body {
     box-shadow: 5px 10px;
 }
 
-form {
-    border: 0;
+#inputForm {
+    border: 0; 
     margin: 2% 2%;
     width: 100%;
     display: flex;
