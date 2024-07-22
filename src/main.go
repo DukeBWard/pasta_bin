@@ -15,10 +15,13 @@ import (
 	"github.com/joho/godotenv"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
+	"google.golang.org/genproto/googleapis/type/date"
 )
 
 type FormData struct {
-	UserInput string
+	UserInput  string
+	PostID     string
+	expiryTime date.Date
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
@@ -156,6 +159,12 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 
 	postID := uuid.New().String()
 	userInput := r.FormValue("userInputHidden")
+
+	post := FormData{
+		UserInput: userInput,
+		PostID:    postID,
+		expiryTime: ,
+	}
 
 	_, _, err = client.Collection("posts").Add(ctx, map[string]interface{}{
 		"post_id": postID,

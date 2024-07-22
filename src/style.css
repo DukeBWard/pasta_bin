@@ -40,3 +40,7 @@ button {
     top: 92%;
     left: 92%;
 }
+
+#expiryInput {
+    width: 25%;
+}

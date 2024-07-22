@@ -126,7 +126,7 @@ func create_pasta_bin(content string, postID string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><input type=\"hidden\" name=\"userInputHidden\" id=\"userInputHidden\"> <button id=\"submit\" type=\"submit\" value=\"Submit\">Submit</button></form></div><script>\n            //this is a little jank but it get the job done with the styling i want\n            document.getElementById('inputForm').addEventListener('submit', function(event) {\n                var userInput = document.getElementById('userInput').innerText;\n                document.getElementById('userInputHidden').value = userInput;\n            });\n        </script></body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</p><input type=\"text\" name=\"expiryTime\" id=\"expiryInput\" placeholder=\"Expiry time (minutes)\"> <input type=\"hidden\" name=\"userInputHidden\" id=\"userInputHidden\"> <button id=\"submit\" type=\"submit\" value=\"Submit\">Submit</button></form></div><script>\n            //this is a little jank but it get the job done with the styling i want\n            document.getElementById('inputForm').addEventListener('submit', function(event) {\n                var userInput = document.getElementById('userInput').innerText;\n                document.getElementById('userInputHidden').value = userInput;\n            });\n        </script></body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

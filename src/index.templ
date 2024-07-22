@@ -53,6 +53,7 @@ templ create_pasta_bin(content string, postID string) {
         <div class="box">
             <form id="inputForm" action="/submit" method="POST">
                 <p type="text" name="userInput" id="userInput" contenteditable="true">{ content }</p>
+                <input type="text" name="expiryTime" id="expiryInput" placeholder="Expiry time (minutes)"></input>
                 <input type="hidden" name="userInputHidden" id="userInputHidden"></input>
                 <button id="submit" type="submit" value="Submit">Submit</button>
             </form>
