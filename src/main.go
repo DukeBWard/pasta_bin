@@ -15,13 +15,12 @@ import (
 	"github.com/joho/godotenv"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
-	"google.golang.org/genproto/googleapis/type/date"
 )
 
 type FormData struct {
-	UserInput  string
-	PostID     string
-	expiryTime date.Date
+	userInput  string
+	postId     string
+	expiryTime string
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
@@ -115,12 +114,12 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 		docData := doc.Data()
 
 		if content, ok := docData["body"].(string); ok {
-			post.UserInput = content
+			post.userInput = content
 		} else {
 			log.Fatalf("error parsing document data")
 		}
 
-		component := get_pasta_bin(post.UserInput, urlParam)
+		component := get_pasta_bin(post.userInput, urlParam)
 		component.Render(r.Context(), w)
 
 	}
@@ -159,16 +158,18 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 
 	postID := uuid.New().String()
 	userInput := r.FormValue("userInputHidden")
+	expiryTime := r.FormValue("expiryTime")
 
 	post := FormData{
-		UserInput: userInput,
-		PostID:    postID,
-		expiryTime: ,
+		userInput:  userInput,
+		postId:     postID,
+		expiryTime: expiryTime,
 	}
 
 	_, _, err = client.Collection("posts").Add(ctx, map[string]interface{}{
-		"post_id": postID,
-		"body":    userInput,
+		"post_id":     post.postId,
+		"body":        post.userInput,
+		"expiry_time": post.expiryTime,
 	})
 	if err != nil {
 		log.Fatalf("Failed: %v", err)
