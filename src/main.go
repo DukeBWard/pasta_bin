@@ -117,7 +117,7 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatalf("error parsing document data")
 		}
 
-		component := pasta_bin(post.UserInput, urlParam)
+		component := get_pasta_bin(post.UserInput, urlParam)
 		component.Render(r.Context(), w)
 
 	}
@@ -181,7 +181,7 @@ func main() {
 
 	// Define routes
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		component := pasta_bin("", "")
+		component := create_pasta_bin("", "")
 		templ.Handler(component).ServeHTTP(w, r)
 	})
 

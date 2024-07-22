@@ -35,14 +35,8 @@ p {
     height: 100%;
 }
 
-#submit {
+button {
     position: absolute;
     top: 92%;
     left: 92%;
-}
-
-#delete {
-    position: absolute;
-    top: 92%;
-    left: 87%;
 }
