@@ -37,7 +37,7 @@ templ pasta_bin(content string, postID string) {
             </form>
             <form id="deleteForm" action="/delete" method="POST"> 
                 <input type="hidden" name="post_id" id="post_id" value={ postID }></input>
-                <button id="delete" type="submit" value="Delete">Delete</button>
+                <button id="delete" type="submit" value="Delete" onclick="return confirm('Are you sure?')">Delete</button>
             </form>
         </div>
 
