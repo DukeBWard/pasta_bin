@@ -19,7 +19,7 @@ func cronjob() {
 	}
 
 	c := cron.New()
-	_, err = c.AddFunc("@hourly", func() { deleteExpiredDocuments(ctx, client, "your-collection-name") })
+	err = c.AddFunc("@hourly", func() { deleteExpiredDocuments(ctx, client, "your-collection-name") })
 	if err != nil {
 		log.Fatalf("Failed to schedule task: %v", err)
 	}
