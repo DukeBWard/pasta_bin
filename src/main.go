@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	firebase "firebase.google.com/go"
 	"github.com/a-h/templ"
@@ -20,7 +21,7 @@ import (
 type FormData struct {
 	userInput  string
 	postId     string
-	expiryTime string
+	expiryTime time.Time
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
@@ -158,7 +159,15 @@ func submitHandler(w http.ResponseWriter, r *http.Request) {
 
 	postID := uuid.New().String()
 	userInput := r.FormValue("userInputHidden")
-	expiryTime := r.FormValue("expiryTime")
+
+	// get the expiry time in string minutes, convert to a time duration and add that to the now
+	expiryTimeString := r.FormValue("expiryTime")
+	expiryTimeDuration, err := time.ParseDuration(expiryTimeString + "m")
+	expiryTime := time.Now().Add(expiryTimeDuration)
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	post := FormData{
 		userInput:  userInput,
