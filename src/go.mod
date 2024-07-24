@@ -3,7 +3,7 @@ module github.com/dukebward/pasta_bin
 go 1.22.3
 
 require (
-	cloud.google.com/go/firestore v1.15.0 // indirect
+	cloud.google.com/go/firestore v1.15.0
 	firebase.google.com/go v3.13.0+incompatible
 )
 
@@ -12,6 +12,7 @@ require (
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
+	github.com/robfig/cron v1.2.0
 	google.golang.org/api v0.167.0
 )
 

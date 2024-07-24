@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/robfig/cron/v3"
+	"github.com/robfig/cron"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
@@ -38,7 +38,7 @@ func deleteExpiredDocuments(ctx context.Context, client *firestore.Client, colle
 	now := time.Now()
 	iter := client.Collection(collection).Where("expiry", "<=", now).Documents(ctx)
 
-	batch := client.BulkWriter(ctx)
+	writer := client.BulkWriter(ctx)
 	count := 0
 
 	for {
@@ -50,14 +50,9 @@ func deleteExpiredDocuments(ctx context.Context, client *firestore.Client, colle
 			log.Printf("Failed to iterate documents: %v", err)
 			return
 		}
-		batch.Delete(doc.Ref)
+		writer.Delete(doc.Ref)
 		count++
 	}
 
-	_, err := batch.Commit(ctx)
-	if err != nil {
-		log.Printf("Failed to delete documents: %v", err)
-	} else {
-		log.Printf("Deleted %d expired documents", count)
-	}
+	writer.Flush()
 }
