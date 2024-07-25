@@ -25,7 +25,7 @@ func cronjob() {
 	}
 	c.Start()
 
-	select {} // Keep the program running
+	select {}
 }
 
 // func addDocumentWithExpiry(ctx context.Context, client *firestore.Client, collection string, data map[string]interface{}) error {
