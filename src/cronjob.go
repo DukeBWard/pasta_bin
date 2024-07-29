@@ -3,17 +3,21 @@ package src
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"github.com/joho/godotenv"
 	"github.com/robfig/cron"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
 
 func cronjob() {
+
+	godotenv.Load()
 	ctx := context.Background()
-	client, err := firestore.NewClient(ctx, "your-project-id", option.WithCredentialsFile("path/to/serviceAccountKey.json"))
+	client, err := firestore.NewClient(ctx, "pasta-bin-2aae4", option.WithCredentialsFile(os.Getenv("CRED")))
 	if err != nil {
 		log.Fatalf("Failed to create Firestore client: %v", err)
 	}
