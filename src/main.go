@@ -208,8 +208,9 @@ func main() {
 	r.Get("/{url}", getHandler)
 	r.Post("/delete", deleteHandler)
 
+	go cronjob()
 	// Start the server
 	fmt.Println("Server started at http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", r))
-	go cronjob()
+	go log.Fatal(http.ListenAndServe(":8080", r))
+
 }

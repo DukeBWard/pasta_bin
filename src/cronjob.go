@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
 	"cloud.google.com/go/firestore"
+	firebase "firebase.google.com/go"
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron"
 	"google.golang.org/api/iterator"
@@ -14,6 +16,7 @@ import (
 )
 
 func cronjob() {
+	log.Print("hit it here1")
 
 	godotenv.Load()
 	ctx := context.Background()
@@ -28,7 +31,7 @@ func cronjob() {
 		log.Fatalf("Failed to schedule task: %v", err)
 	}
 	c.Start()
-
+	select {}
 }
 
 // func addDocumentWithExpiry(ctx context.Context, client *firestore.Client, collection string, data map[string]interface{}) error {
@@ -39,10 +42,25 @@ func cronjob() {
 
 func deleteExpiredDocuments(ctx context.Context, client *firestore.Client, collection string) {
 	now := time.Now()
-	iter := client.Collection(collection).Where("expiry", "<=", now).Documents(ctx)
+	log.Print("hit it here")
+	godotenv.Load()
 
-	writer := client.BulkWriter(ctx)
-	count := 0
+	// Use a service account
+	//ctx := context.Background()
+	sa := option.WithCredentialsFile(os.Getenv("CRED"))
+	app, err := firebase.NewApp(ctx, nil, sa)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	client, err = app.Firestore(ctx)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer client.Close()
+
+	iter := client.Collection(collection).Where("expiry_time", "<=", now).Documents(ctx)
 
 	for {
 		doc, err := iter.Next()
@@ -50,12 +68,30 @@ func deleteExpiredDocuments(ctx context.Context, client *firestore.Client, colle
 			break
 		}
 		if err != nil {
-			log.Printf("Failed to iterate documents: %v", err)
+			log.Print("Error finding document", http.StatusInternalServerError)
 			return
 		}
-		writer.Delete(doc.Ref)
-		count++
-	}
 
-	writer.Flush()
+		doc.Ref.Delete(ctx)
+	}
+	// iter := client.Collection(collection).Where("expiry", "<=", now).Documents(ctx)
+
+	// writer := client.BulkWriter(ctx)
+	// count := 0
+
+	// for {
+	// 	doc, err := iter.Next()
+	// 	if err == iterator.Done {
+	// 		break
+	// 	}
+	// 	if err != nil {
+	// 		log.Printf("Failed to iterate documents: %v", err)
+	// 		return
+	// 	}
+	// 	doc.Ref.Delete(ctx)
+	// 	// writer.Delete(doc.Ref)
+	// 	count++
+	// }
+
+	// writer.Flush()
 }
