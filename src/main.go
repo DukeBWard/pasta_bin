@@ -1,4 +1,4 @@
-package src
+package main
 
 import (
 	"context"
@@ -211,4 +211,5 @@ func main() {
 	// Start the server
 	fmt.Println("Server started at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
+	go cronjob()
 }
