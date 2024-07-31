@@ -16,7 +16,6 @@ import (
 )
 
 func cronjob() {
-	log.Print("hit it here1")
 
 	godotenv.Load()
 	ctx := context.Background()
@@ -33,15 +32,8 @@ func cronjob() {
 	c.Start()
 }
 
-// func addDocumentWithExpiry(ctx context.Context, client *firestore.Client, collection string, data map[string]interface{}) error {
-// 	data["expiry"] = time.Now().Add(24 * time.Hour) // Set expiry to 24 hours from now
-// 	_, _, err := client.Collection(collection).Add(ctx, data)
-// 	return err
-// }
-
 func deleteExpiredDocuments(ctx context.Context, client *firestore.Client, collection string) {
 	now := time.Now()
-	log.Print("hit it here")
 	godotenv.Load()
 
 	// Use a service account
@@ -73,24 +65,4 @@ func deleteExpiredDocuments(ctx context.Context, client *firestore.Client, colle
 
 		doc.Ref.Delete(ctx)
 	}
-	// iter := client.Collection(collection).Where("expiry", "<=", now).Documents(ctx)
-
-	// writer := client.BulkWriter(ctx)
-	// count := 0
-
-	// for {
-	// 	doc, err := iter.Next()
-	// 	if err == iterator.Done {
-	// 		break
-	// 	}
-	// 	if err != nil {
-	// 		log.Printf("Failed to iterate documents: %v", err)
-	// 		return
-	// 	}
-	// 	doc.Ref.Delete(ctx)
-	// 	// writer.Delete(doc.Ref)
-	// 	count++
-	// }
-
-	// writer.Flush()
 }
