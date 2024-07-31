@@ -26,12 +26,11 @@ func cronjob() {
 	}
 
 	c := cron.New()
-	err = c.AddFunc("@every 10m", func() { deleteExpiredDocuments(ctx, client, "posts") })
+	err = c.AddFunc("@every 5s", func() { deleteExpiredDocuments(ctx, client, "posts") })
 	if err != nil {
 		log.Fatalf("Failed to schedule task: %v", err)
 	}
 	c.Start()
-	select {}
 }
 
 // func addDocumentWithExpiry(ctx context.Context, client *firestore.Client, collection string, data map[string]interface{}) error {
