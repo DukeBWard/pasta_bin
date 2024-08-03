@@ -1,22 +1,53 @@
 package main
 
 import (
-	appsv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/apps/v1"
+	"fmt"
+
+	"github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/apps/v1beta1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/meta/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		isMinikube := config.GetBool(ctx, "isMinikube")
-		appName := "nginx"
+		// Configurations
+		appName := "my-go-app"
 		appLabels := pulumi.StringMap{
 			"app": pulumi.String(appName),
 		}
-		deployment, err := appsv1.NewDeployment(ctx, appName, &appsv1.DeploymentArgs{
-			Spec: appsv1.DeploymentSpecArgs{
+
+		// Create a Kubernetes Namespace
+		namespace, err := corev1.NewNamespace(ctx, appName, &corev1.NamespaceArgs{
+			Metadata: &metav1.ObjectMetaArgs{
+				Name: pulumi.String(appName),
+			},
+		})
+		if err != nil {
+			return err
+		}
+
+		// Create a ConfigMap
+		_, err = corev1.NewConfigMap(ctx, appName, &corev1.ConfigMapArgs{
+			Metadata: &metav1.ObjectMetaArgs{
+				Namespace: namespace.Metadata.Name(),
+				Name:      pulumi.String(fmt.Sprintf("%s-config", appName)),
+			},
+			Data: pulumi.StringMap{
+				"config.yaml": pulumi.String("key: value"),
+			},
+		})
+		if err != nil {
+			return err
+		}
+
+		// Create a Deployment
+		_, err = v1beta1.NewDeployment(ctx, appName, &v1beta1.DeploymentArgs{
+			Metadata: &metav1.ObjectMetaArgs{
+				Namespace: namespace.Metadata.Name(),
+				Name:      pulumi.String(appName),
+			},
+			Spec: &v1beta1.DeploymentSpecArgs{
 				Selector: &metav1.LabelSelectorArgs{
 					MatchLabels: appLabels,
 				},
@@ -27,10 +58,16 @@ func main() {
 					},
 					Spec: &corev1.PodSpecArgs{
 						Containers: corev1.ContainerArray{
-							corev1.ContainerArgs{
-								Name:  pulumi.String("nginx"),
-								Image: pulumi.String("nginx"),
-							}},
+							&corev1.ContainerArgs{
+								Name:  pulumi.String(appName),
+								Image: pulumi.String("my-docker-image:latest"),
+								Ports: corev1.ContainerPortArray{
+									&corev1.ContainerPortArgs{
+										ContainerPort: pulumi.Int(8080),
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -39,57 +76,27 @@ func main() {
 			return err
 		}
 
-		feType := "LoadBalancer"
-		if isMinikube {
-			feType = "ClusterIP"
-		}
-
-		template := deployment.Spec.ApplyT(func(v appsv1.DeploymentSpec) *corev1.PodTemplateSpec {
-			return &v.Template
-		}).(corev1.PodTemplateSpecPtrOutput)
-
-		meta := template.ApplyT(func(v *corev1.PodTemplateSpec) *metav1.ObjectMeta { return v.Metadata }).(metav1.ObjectMetaPtrOutput)
-
-		frontend, _ := corev1.NewService(ctx, appName, &corev1.ServiceArgs{
-			Metadata: meta,
+		// Create a Service
+		_, err = corev1.NewService(ctx, appName, &corev1.ServiceArgs{
+			Metadata: &metav1.ObjectMetaArgs{
+				Namespace: namespace.Metadata.Name(),
+				Name:      pulumi.String(appName),
+			},
 			Spec: &corev1.ServiceSpecArgs{
-				Type: pulumi.String(feType),
-				Ports: &corev1.ServicePortArray{
+				Selector: appLabels,
+				Ports: corev1.ServicePortArray{
 					&corev1.ServicePortArgs{
 						Port:       pulumi.Int(80),
-						TargetPort: pulumi.Int(80),
-						Protocol:   pulumi.String("TCP"),
+						TargetPort: pulumi.Int(8080),
 					},
 				},
-				Selector: appLabels,
+				Type: pulumi.String("LoadBalancer"),
 			},
 		})
-
-		var ip pulumi.StringOutput
-
-		if isMinikube {
-			ip = frontend.Spec.ApplyT(func(val corev1.ServiceSpec) string {
-				if val.ClusterIP != nil {
-					return *val.ClusterIP
-				}
-				return ""
-			}).(pulumi.StringOutput)
-		} else {
-			ip = frontend.Status.ApplyT(func(val *corev1.ServiceStatus) string {
-				if val.LoadBalancer.Ingress != nil && len(val.LoadBalancer.Ingress) > 0 {
-					ingress := val.LoadBalancer.Ingress[0]
-					if ingress.Ip != nil {
-						return *ingress.Ip
-					}
-					if ingress.Hostname != nil {
-						return *ingress.Hostname
-					}
-				}
-				return ""
-			}).(pulumi.StringOutput)
+		if err != nil {
+			return err
 		}
 
-		ctx.Export("ip", ip)
 		return nil
 	})
 }
