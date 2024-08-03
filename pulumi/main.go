@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/apps/v1beta1"
+	appv1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/apps/v1"
 	corev1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/core/v1"
 	metav1 "github.com/pulumi/pulumi-kubernetes/sdk/v4/go/kubernetes/meta/v1"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -42,12 +42,12 @@ func main() {
 		}
 
 		// Create a Deployment
-		_, err = v1beta1.NewDeployment(ctx, appName, &v1beta1.DeploymentArgs{
+		_, err = appv1.NewDeployment(ctx, appName, &appv1.DeploymentArgs{
 			Metadata: &metav1.ObjectMetaArgs{
 				Namespace: namespace.Metadata.Name(),
 				Name:      pulumi.String(appName),
 			},
-			Spec: &v1beta1.DeploymentSpecArgs{
+			Spec: &appv1.DeploymentSpecArgs{
 				Selector: &metav1.LabelSelectorArgs{
 					MatchLabels: appLabels,
 				},
