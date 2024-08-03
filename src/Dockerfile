@@ -9,6 +9,7 @@
 ################################################################################
 # Create a stage for building the application.
 ARG GO_VERSION=1.22.3
+ARG CRED
 FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
 WORKDIR /src
 
