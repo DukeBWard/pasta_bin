@@ -7,5 +7,6 @@ Paste bin in Golang!
 * Scheduled job seems to be working with the expiry timer.
 * Next step is provisioning cloud resources
   * [ ] IaC (Pulumi)
-  * [ ] Kubernetes
+  * [x] Kubernetes config
+    * [ ] Kubernetes onboarding
   * [ ] CI/CD
