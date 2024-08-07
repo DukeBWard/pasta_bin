@@ -12,7 +12,7 @@ import (
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		// Configurations
-		appName := "pasta_bin"
+		appName := "pasta-bin"
 		appLabels := pulumi.StringMap{
 			"app": pulumi.String(appName),
 		}
