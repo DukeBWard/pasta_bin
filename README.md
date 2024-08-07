@@ -8,5 +8,6 @@ Paste bin in Golang!
 * Next step is provisioning cloud resources
   * [ ] IaC (Pulumi)
   * [x] Kubernetes config
+    * [ ] Containerization
     * [ ] Kubernetes onboarding
   * [ ] CI/CD
