@@ -9,5 +9,6 @@ Paste bin in Golang!
   * [ ] IaC (Pulumi)
   * [x] Kubernetes config
     * [ ] Containerization
+      * [ ] Trying to get docker volume to store json config
     * [ ] Kubernetes onboarding
   * [ ] CI/CD
