@@ -15,12 +15,12 @@ services:
     ports:
       - 8080:8080
     environment:
-      - CRED=/Users/lukeward/Documents/pasta-bin-2aae4-firebase-adminsdk-57nqd-afab52ecf3.json
+      - CRED=config/pasta-bin-2aae4-firebase-adminsdk-57nqd-afab52ecf3.json
     volumes:
   config:
 secrets:
   cred:
-    file: /Users/lukeward/Documents/pasta-bin-2aae4-firebase-adminsdk-57nqd-afab52ecf3.json
+    file: config/pasta-bin-2aae4-firebase-adminsdk-57nqd-afab52ecf3.json
 
 
 # The commented out section below is an example of how to define a PostgreSQL
