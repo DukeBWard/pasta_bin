@@ -15,7 +15,7 @@ services:
     ports:
       - 8080:8080
     environment:
-      - CRED=/pasta-bin-2aae4-firebase-adminsdk-57nqd-afab52ecf3.json
+      - CRED=pasta-bin-2aae4-firebase-adminsdk-57nqd-afab52ecf3.json
     volumes:
       - ./config/pasta-bin-2aae4-firebase-adminsdk-57nqd-afab52ecf3.json:/pasta-bin-2aae4-firebase-adminsdk-57nqd-afab52ecf3.json
 
