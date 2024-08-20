@@ -60,7 +60,7 @@ func main() {
 						Containers: corev1.ContainerArray{
 							&corev1.ContainerArgs{
 								Name:  pulumi.String(appName),
-								Image: pulumi.String("my-docker-image:latest"),
+								Image: pulumi.String("src-server:latest"),
 								Ports: corev1.ContainerPortArray{
 									&corev1.ContainerPortArgs{
 										ContainerPort: pulumi.Int(8080),

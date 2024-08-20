@@ -16,9 +16,11 @@ services:
       - 8080:8080
     environment:
       - CRED=/pasta-bin-2aae4-firebase-adminsdk-57nqd-eddd0b1bc0.json
+    working_dir: /app
     volumes:
       - ./config/pasta-bin-2aae4-firebase-adminsdk-57nqd-eddd0b1bc0.json:/pasta-bin-2aae4-firebase-adminsdk-57nqd-eddd0b1bc0.json
-
+      - .:/app
+      - ../assets:/assets
 volumes:
   config:
 
