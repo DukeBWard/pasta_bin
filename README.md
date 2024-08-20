@@ -10,5 +10,5 @@ Paste bin in Golang!
   * [x] Kubernetes config
     * [ ] Containerization
       * [ ] Trying to get docker volume to store json config
-    * [ ] Kubernetes onboarding
+    * [ ] Kubernetes onboarding (EKS IS WAY TOO EXPENSIVE BRO)
   * [ ] CI/CD
