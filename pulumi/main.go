@@ -90,7 +90,7 @@ func main() {
 						TargetPort: pulumi.Int(8080),
 					},
 				},
-				Type: pulumi.String("LoadBalancer"),
+				Type: pulumi.String("NodePort"),
 			},
 		})
 		if err != nil {
